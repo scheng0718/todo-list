@@ -3,6 +3,8 @@ const express = require('express')
 const app = express()
 // Load mongoose
 const mongoose = require('mongoose')
+// Load express handlebars
+const exphbs = require('express-handlebars')
 const port = 3000
 
 if (process.env.NODE_ENV !== 'production') {
@@ -21,8 +23,11 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
+app.set('view engine', 'hbs')
+
 app.get('/', (req, res) => {
-  res.send('This is application of todo-list')
+  res.render('index')
 })
 
 app.listen(port, () => {
