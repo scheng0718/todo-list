@@ -1,6 +1,8 @@
 // Load mongoose
 const mongoose = require('mongoose')
+// Use Schema module
 const Schema = mongoose.Schema
+// Construct a new object
 const todoSchema = new Schema({
   name: {
     type: String,
