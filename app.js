@@ -5,6 +5,8 @@ const app = express()
 const mongoose = require('mongoose')
 // Load express handlebars
 const exphbs = require('express-handlebars')
+// Load Todo
+const Todo = require('./models/todo')
 const port = 3000
 
 if (process.env.NODE_ENV !== 'production') {
@@ -27,7 +29,10 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 
 app.get('/', (req, res) => {
-  res.render('index')
+  Todo.find()
+    .lean()
+    .then(todos => res.render('index', {todos}))
+    .catch(error => console.error(error))
 })
 
 app.listen(port, () => {
