@@ -7,6 +7,9 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 // Load Todo
 const Todo = require('./models/todo')
+// Load body-parser
+const bodyParser = require('body-parser')
+
 const port = 3000
 
 if (process.env.NODE_ENV !== 'production') {
@@ -28,11 +31,25 @@ db.once('open', () => {
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.get('/', (req, res) => {
   Todo.find()
     .lean()
     .then(todos => res.render('index', {todos}))
     .catch(error => console.error(error))
+})
+// 設定 todos/new 路由頁面，顯示 new.hbs 頁面
+app.get('/todos/new', (req, res) => {
+  return res.render('new')  
+})
+// 
+app.post('/todos', (req, res) => {
+  const name = req.body.name
+  console.log(name)
+  return Todo.create({ name })
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
