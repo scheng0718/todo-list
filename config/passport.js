@@ -23,11 +23,11 @@ module.exports = (app) => {
   passport.serializeUser((user, done) => {
     done(null, user.id)
   })
+  // 反序列化會拿到 user 物件的資料
   passport.deserializeUser((id, done) => {
     User.findById(id)
       .lean()
       .then(user => {
-        console.log(user)
         done(null, user)
       })
       .catch(error => done(error, null))
